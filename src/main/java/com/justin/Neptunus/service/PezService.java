@@ -2,6 +2,7 @@ package com.justin.Neptunus.service;
 
 import com.justin.Neptunus.dto.PezDTO;
 import com.justin.Neptunus.dto.PezRequestDTO;
+import com.justin.Neptunus.exception.RecursoNoEncontradoException;
 import com.justin.Neptunus.model.Categoria;
 import com.justin.Neptunus.model.Pez;
 import com.justin.Neptunus.repository.CategoriaRepository;
@@ -31,13 +32,13 @@ public class PezService {
 
     public PezDTO obtenerPorId(Long id) {
         Pez pez = pezRepository.findByIdConCategoria(id)
-                .orElseThrow(() -> new RuntimeException("Pez no encontrado con id: " + id));
+                .orElseThrow(() -> new RecursoNoEncontradoException("Pez no encontrado con id: " + id));
         return convertirADTO(pez);
     }
 
     public PezDTO crear(PezRequestDTO dto) {
         Categoria categoria = categoriaRepository.findById(dto.getCategoriaId())
-                .orElseThrow(() -> new RuntimeException("Categoría no encontrada con id: " + dto.getCategoriaId()));
+                .orElseThrow(() -> new RecursoNoEncontradoException("Categoría no encontrada con id: " + dto.getCategoriaId()));
 
         Pez pez = new Pez();
         pez.setCategoria(categoria);
@@ -80,10 +81,10 @@ public class PezService {
     @Transactional
     public PezDTO actualizar(Long id, PezRequestDTO dto) {
         Pez pez = pezRepository.findByIdConCategoria(id)
-                .orElseThrow(() -> new RuntimeException("Pez no encontrado con id: " + id));
+                .orElseThrow(() -> new RecursoNoEncontradoException("Pez no encontrado con id: " + id));
 
         Categoria categoria = categoriaRepository.findById(dto.getCategoriaId())
-                .orElseThrow(() -> new RuntimeException("Categoría no encontrada con id: " + dto.getCategoriaId()));
+                .orElseThrow(() -> new RecursoNoEncontradoException("Categoría no encontrada con id: " + dto.getCategoriaId()));
 
         pez.setCategoria(categoria);
         pez.setNombre(dto.getNombre());
@@ -105,7 +106,7 @@ public class PezService {
     @Transactional
     public void eliminar(Long id) {
         if (!pezRepository.existsById(id)) {
-            throw new RuntimeException("Pez no encontrado con id: " + id);
+            throw new RecursoNoEncontradoException("Pez no encontrado con id: " + id);
         }
         pezRepository.deleteById(id);
     }

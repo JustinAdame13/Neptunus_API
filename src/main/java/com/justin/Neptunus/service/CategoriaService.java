@@ -1,6 +1,7 @@
 package com.justin.Neptunus.service;
 
 import com.justin.Neptunus.dto.CategoriaDTO;
+import com.justin.Neptunus.exception.RecursoNoEncontradoException;
 import com.justin.Neptunus.model.Categoria;
 import com.justin.Neptunus.repository.CategoriaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class CategoriaService {
 
     public CategoriaDTO obtenerPorId(Long id) {
         Categoria categoria = categoriaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Categoría no encontrada con id: " + id));
+                .orElseThrow(() -> new RecursoNoEncontradoException("Categoría no encontrada con id: " + id));
         return convertirADTO(categoria);
     }
 
